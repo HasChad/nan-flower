@@ -24,11 +24,20 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     let purple_flower_pos = window_width / 2. - 200.;
     let big_flower_pos = 0.;
 
-    let mut speed = 3000. / window_width;
-
-    speed = ease_in_sine(speed);
-    println!("speed = {}", speed);
+    let speed = 2000. / window_width;
+    let saturation = if speed < 3.5 { speed / 3.5 } else { 1.0 };
     let spread = 2.0;
+
+    println!("sat = {}", saturation);
+
+    // colors
+    let sap = hsv(0.33, saturation, 0.5);
+
+    let white_flow_color = hsv(1.0, 0.0, 1.0);
+    let white_inside_color = hsv(0.55, saturation * 0.5, 0.9);
+
+    let purple_flow_color = hsv(0.0, saturation * 1.0, 1.0);
+    let purple_inside_color = hsv(0.33, saturation, 0.5);
 
     if window_width > 400.0 {
         // ! white flower
@@ -45,7 +54,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
                     ),
                 x * -10.0,
             );
-            (point, GREEN)
+            (point, sap)
         });
         draw.polyline().weight(10.).points_colored(points);
 
@@ -54,12 +63,14 @@ fn view(app: &App, _model: &Model, frame: Frame) {
             let x = radus.sin() * 75.;
             let y = radus.cos() * 75.;
             draw.ellipse()
-                .color(WHITE)
+                .color(white_flow_color)
                 .w_h(50., 150.)
                 .x_y(white_flower_pos + x, y)
                 .rotate(-radus);
         }
-        draw.ellipse().x_y(white_flower_pos, 0.0).color(LIGHTBLUE);
+        draw.ellipse()
+            .x_y(white_flower_pos, 0.0)
+            .color(white_inside_color);
 
         // ! purple flower
         let points = (0..50).map(|i| {
@@ -75,7 +86,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
                     ),
                 x * -10.0,
             );
-            (point, GREEN)
+            (point, sap)
         });
         draw.polyline().weight(15.).points_colored(points);
 
@@ -84,12 +95,16 @@ fn view(app: &App, _model: &Model, frame: Frame) {
             let x = radus.sin() * 75.;
             let y = radus.cos() * 75.;
             draw.ellipse()
-                .color(PURPLE)
+                .color(purple_flow_color)
                 .w_h(100., 100.)
                 .x_y(purple_flower_pos + x, y)
                 .rotate(-radus);
         }
-        draw.ellipse().x_y(purple_flower_pos, 0.0).color(WHITE);
+        draw.ellipse()
+            .x_y(purple_flower_pos, 0.0)
+            .color(purple_inside_color);
+
+    // ! rainbow flower
     } else {
         let points = (0..50).map(|i| {
             let x = i as f32;
@@ -137,8 +152,4 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 
     draw.background().color(BLACK);
     draw.to_frame(app, &frame).unwrap();
-}
-
-fn ease_in_sine(x: f32) -> f32 {
-    1.0 - ((x * PI) / 2.0).cos()
 }
