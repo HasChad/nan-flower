@@ -28,15 +28,14 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     let saturation = if speed < 3.5 { speed / 3.5 } else { 1.0 };
     let spread = 2.0;
 
-    println!("sat = {}", saturation);
-
     // colors
-    let sap = hsv(0.33, saturation, 0.5);
+    let sap = hsv(0.22, saturation * 1.0, 0.67);
 
     let white_flow_color = hsv(1.0, 0.0, 1.0);
     let white_inside_color = hsv(0.55, saturation * 0.5, 0.9);
 
-    let purple_flow_color = hsv(0.0, saturation * 1.0, 1.0);
+    let purple_flow_color = hsv(0.77, 0.84, 0.67);
+    let purple_flow_color = hsl(0.77, 0.72, 0.39);
     let purple_inside_color = hsv(0.33, saturation, 0.5);
 
     if window_width > 400.0 {
